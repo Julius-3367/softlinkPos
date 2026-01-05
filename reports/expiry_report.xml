@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Expiry Alert Report -->
+    <record id="action_report_expiry_alert" model="ir.actions.report">
+        <field name="name">Expiry Alert Report</field>
+        <field name="model">pharmacy.expiry.alert.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">softlink_pos.report_expiry_alert_document</field>
+        <field name="report_file">softlink_pos.report_expiry_alert_document</field>
+        <field name="binding_model_id" ref="model_pharmacy_expiry_alert_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_expiry_alert_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Expiry Alert Report</h2>
+                        <p>Generated on: <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></p>
+                        <p>Threshold: Products expiring within <span t-field="o.days_threshold"/> days</p>
+                        <table class="table table-sm mt-4">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Lot/Batch</th>
+                                    <th>Expiry Date</th>
+                                    <th>Available Qty</th>
+                                    <th>Days to Expiry</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids" t-as="line" t-att-class="'table-danger' if line.is_expired else 'table-warning' if line.status == 'CRITICAL' else ''">
+                                    <td><span t-field="line.product_id.name"/></td>
+                                    <td><span t-field="line.lot_id.name"/></td>
+                                    <td><span t-field="line.expiry_date"/></td>
+                                    <td><span t-field="line.available_qty"/></td>
+                                    <td><span t-field="line.days_to_expiry"/></td>
+                                    <td><span t-field="line.status"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

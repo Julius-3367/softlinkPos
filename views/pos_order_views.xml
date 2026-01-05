@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- POS Order Inherit Form View -->
+    <record id="view_pos_order_form_inherit" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="patient_id"/>
+                <field name="patient_name"/>
+                <field name="patient_phone"/>
+                <field name="prescription_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

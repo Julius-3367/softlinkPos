@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Controlled Drugs Register Tree View -->
+    <record id="view_controlled_drugs_register_tree" model="ir.ui.view">
+        <field name="name">pharmacy.controlled.drugs.register.tree</field>
+        <field name="model">pharmacy.controlled.drugs.register</field>
+        <field name="arch" type="xml">
+            <list string="Controlled Drugs Register" create="false" delete="false">
+                <field name="date"/>
+                <field name="product_id"/>
+                <field name="patient_name"/>
+                <field name="patient_id_number"/>
+                <field name="prescriber_id"/>
+                <field name="prescriber_license"/>
+                <field name="quantity"/>
+                <field name="uom_id"/>
+                <field name="dispensed_by"/>
+                <field name="pharmacist_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Controlled Drugs Register Form View -->
+    <record id="view_controlled_drugs_register_form" model="ir.ui.view">
+        <field name="name">pharmacy.controlled.drugs.register.form</field>
+        <field name="model">pharmacy.controlled.drugs.register</field>
+        <field name="arch" type="xml">
+            <form string="Controlled Drugs Register Entry" create="false" delete="false">
+                <sheet>
+                    <group>
+                        <group string="Transaction Details">
+                            <field name="date"/>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="uom_id"/>
+                        </group>
+                        <group string="Sale Information">
+                            <field name="pos_order_id"/>
+                            <field name="purpose"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Patient Information">
+                            <field name="patient_id"/>
+                            <field name="patient_name"/>
+                            <field name="patient_id_number"/>
+                            <field name="patient_address"/>
+                        </group>
+                        <group string="Prescription Information">
+                            <field name="prescription_id"/>
+                            <field name="prescriber_id"/>
+                            <field name="prescriber_license"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Staff Information">
+                            <field name="dispensed_by"/>
+                            <field name="pharmacist_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Controlled Drugs Register Action -->
+    <record id="action_controlled_drugs_register" model="ir.actions.act_window">
+        <field name="name">Controlled Drugs Register</field>
+        <field name="res_model">pharmacy.controlled.drugs.register</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Controlled Drugs Register Search View -->
+    <record id="view_controlled_drugs_register_search" model="ir.ui.view">
+        <field name="name">pharmacy.controlled.drugs.register.search</field>
+        <field name="model">pharmacy.controlled.drugs.register</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+                <field name="patient_name"/>
+                <field name="patient_id_number"/>
+                <field name="prescriber_id"/>
+                <field name="dispensed_by"/>
+                <field name="pharmacist_id"/>
+                <filter string="Today" name="today" domain="[('date', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0))]"/>
+                <filter string="This Week" name="this_week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="this_month" domain="[('date', '&gt;=', (context_today().replace(day=1)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="group_product" context="{'group_by': 'product_id'}"/>
+                    <filter string="Prescriber" name="group_prescriber" context="{'group_by': 'prescriber_id'}"/>
+                    <filter string="Pharmacist" name="group_pharmacist" context="{'group_by': 'pharmacist_id'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>

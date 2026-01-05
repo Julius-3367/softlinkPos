@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Payment Method Form View with Kenyan Payment Options -->
+    <record id="view_pos_payment_method_form_kenya" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.kenya</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="after">
+                <field name="payment_type" widget="radio"/>
+            </xpath>
+            
+            <xpath expr="//sheet" position="inside">
+                <group string="M-Pesa Configuration" invisible="payment_type != 'mpesa'">
+                    <group>
+                        <field name="mpesa_shortcode" placeholder="174379"/>
+                        <field name="mpesa_consumer_key"/>
+                        <field name="mpesa_consumer_secret" password="True"/>
+                    </group>
+                    <group>
+                        <field name="mpesa_passkey" password="True"/>
+                        <field name="mpesa_environment" widget="radio"/>
+                    </group>
+                </group>
+                
+                <group string="Insurance Configuration" invisible="payment_type != 'insurance'">
+                    <group>
+                        <field name="insurance_company_id"/>
+                        <field name="insurance_api_url"/>
+                    </group>
+                    <group>
+                        <field name="insurance_api_key" password="True"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

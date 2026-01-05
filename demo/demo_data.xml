@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Demo Products -->
+        <record id="demo_product_paracetamol" model="product.product">
+            <field name="name">Paracetamol 500mg Tablets</field>
+            <field name="is_pharmaceutical">True</field>
+            <field name="list_price">50.00</field>
+            <field name="standard_price">30.00</field>
+            <field name="categ_id" ref="product_category_otc"/>
+            <field name="type">product</field>
+            <field name="available_in_pos">True</field>
+            <field name="tracking">lot</field>
+        </record>
+
+        <record id="demo_pharmacy_product_paracetamol" model="pharmacy.product">
+            <field name="name">Paracetamol 500mg Tablets</field>
+            <field name="product_id" ref="demo_product_paracetamol"/>
+            <field name="generic_name">Paracetamol</field>
+            <field name="brand_name">Panadol</field>
+            <field name="active_ingredient">Paracetamol 500mg</field>
+            <field name="drug_category">otc</field>
+            <field name="dosage_form">tablet</field>
+            <field name="strength">500mg</field>
+            <field name="pack_size">100</field>
+            <field name="ppb_registration_no">PPB/POM/2020/001</field>
+        </record>
+
+        <record id="demo_product_amoxicillin" model="product.product">
+            <field name="name">Amoxicillin 250mg Capsules</field>
+            <field name="is_pharmaceutical">True</field>
+            <field name="list_price">150.00</field>
+            <field name="standard_price">90.00</field>
+            <field name="categ_id" ref="product_category_prescription_medicines"/>
+            <field name="type">product</field>
+            <field name="available_in_pos">True</field>
+            <field name="tracking">lot</field>
+        </record>
+
+        <record id="demo_pharmacy_product_amoxicillin" model="pharmacy.product">
+            <field name="name">Amoxicillin 250mg Capsules</field>
+            <field name="product_id" ref="demo_product_amoxicillin"/>
+            <field name="generic_name">Amoxicillin</field>
+            <field name="brand_name">Amoxil</field>
+            <field name="active_ingredient">Amoxicillin Trihydrate 250mg</field>
+            <field name="drug_category">prescription</field>
+            <field name="dosage_form">capsule</field>
+            <field name="strength">250mg</field>
+            <field name="pack_size">21</field>
+            <field name="ppb_registration_no">PPB/POM/2020/002</field>
+        </record>
+
+        <!-- Demo Patient -->
+        <record id="demo_patient_1" model="pharmacy.patient">
+            <field name="first_name">John</field>
+            <field name="last_name">Kamau</field>
+            <field name="date_of_birth">1985-05-15</field>
+            <field name="gender">male</field>
+            <field name="phone">0712345678</field>
+            <field name="id_number">12345678</field>
+            <field name="city">Nairobi</field>
+            <field name="county">Nairobi</field>
+        </record>
+
+        <record id="demo_patient_2" model="pharmacy.patient">
+            <field name="first_name">Jane</field>
+            <field name="last_name">Wanjiru</field>
+            <field name="date_of_birth">1990-08-20</field>
+            <field name="gender">female</field>
+            <field name="phone">0723456789</field>
+            <field name="id_number">23456789</field>
+            <field name="has_insurance">True</field>
+            <field name="insurance_company">AAR Insurance</field>
+            <field name="insurance_number">AAR-2024-12345</field>
+            <field name="city">Nairobi</field>
+            <field name="county">Nairobi</field>
+        </record>
+
+        <!-- Demo Prescriber -->
+        <record id="demo_prescriber_1" model="pharmacy.prescriber">
+            <field name="name">Dr. Peter Mwangi</field>
+            <field name="title">dr</field>
+            <field name="license_number">MP-2020-12345</field>
+            <field name="specialization">general</field>
+            <field name="phone">0734567890</field>
+            <field name="email">dr.mwangi@hospital.co.ke</field>
+            <field name="facility_name">Nairobi General Hospital</field>
+            <field name="is_verified">True</field>
+        </record>
+
+        <!-- Demo Prescription -->
+        <record id="demo_prescription_1" model="pharmacy.prescription">
+            <field name="patient_id" ref="demo_patient_1"/>
+            <field name="prescriber_id" ref="demo_prescriber_1"/>
+            <field name="diagnosis">Upper Respiratory Tract Infection</field>
+            <field name="state">confirmed</field>
+            <field name="verified_by_pharmacist">True</field>
+        </record>
+
+        <record id="demo_prescription_line_1" model="pharmacy.prescription.line">
+            <field name="prescription_id" ref="demo_prescription_1"/>
+            <field name="product_id" ref="demo_product_amoxicillin"/>
+            <field name="quantity">21</field>
+            <field name="dosage">1 capsule</field>
+            <field name="frequency">Three times daily</field>
+            <field name="duration">7 days</field>
+            <field name="instructions">Take with food</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Prescriber Tree View -->
+    <record id="view_pharmacy_prescriber_tree" model="ir.ui.view">
+        <field name="name">pharmacy.prescriber.tree</field>
+        <field name="model">pharmacy.prescriber</field>
+        <field name="arch" type="xml">
+            <list string="Prescribers">
+                <field name="name"/>
+                <field name="license_number"/>
+                <field name="specialization"/>
+                <field name="phone"/>
+                <field name="is_verified" widget="boolean_toggle"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Prescriber Form View -->
+    <record id="view_pharmacy_prescriber_form" model="ir.ui.view">
+        <field name="name">pharmacy.prescriber.form</field>
+        <field name="model">pharmacy.prescriber</field>
+        <field name="arch" type="xml">
+            <form string="Prescriber">
+                <header>
+                    <button name="action_verify_prescriber" type="object" string="Verify Prescriber" 
+                            class="btn-success" invisible="is_verified"/>
+                    <field name="is_verified" widget="badge" decoration-success="is_verified == True"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_prescriptions" type="object" class="oe_stat_button" icon="fa-prescription">
+                            <field name="prescription_count" widget="statinfo" string="Prescriptions"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="title" options="{'horizontal': true}" widget="radio" class="me-2"/>
+                            <field name="name" placeholder="Full Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Professional Details">
+                            <field name="license_number"/>
+                            <field name="license_authority"/>
+                            <field name="license_expiry"/>
+                            <field name="specialization"/>
+                            <field name="other_specialization" invisible="specialization != 'other'"/>
+                        </group>
+                        <group string="Contact Information">
+                            <field name="phone"/>
+                            <field name="email" widget="email"/>
+                            <field name="facility_name"/>
+                            <field name="facility_address"/>
+                        </group>
+                    </group>
+                    <group string="Verification" invisible="not is_verified">
+                        <field name="verification_date"/>
+                        <field name="verified_by"/>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                    <group>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Prescriber Action -->
+    <record id="action_pharmacy_prescriber" model="ir.actions.act_window">
+        <field name="name">Prescribers</field>
+        <field name="res_model">pharmacy.prescriber</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

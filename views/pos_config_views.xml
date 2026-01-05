@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- POS Config Inherit Form View -->
+    <record id="view_pos_config_form_inherit" model="ir.ui.view">
+        <field name="name">pos.config.form.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form//sheet" position="inside">
+                <group string="Pharmacy Settings" name="pharmacy_settings">
+                    <group string="General Settings">
+                        <field name="is_pharmacy_pos"/>
+                        <field name="require_prescription_validation" invisible="not is_pharmacy_pos"/>
+                        <field name="require_pharmacist_approval" invisible="not is_pharmacy_pos"/>
+                        <field name="allow_otc_sales" invisible="not is_pharmacy_pos"/>
+                    </group>
+                    <group string="Stock Settings">
+                        <field name="block_expired_products" invisible="not is_pharmacy_pos"/>
+                        <field name="warn_near_expiry" invisible="not is_pharmacy_pos"/>
+                        <field name="near_expiry_days" invisible="not warn_near_expiry or not is_pharmacy_pos"/>
+                    </group>
+                    <group string="Insurance Settings">
+                        <field name="enable_insurance" invisible="not is_pharmacy_pos"/>
+                        <field name="default_insurance_percentage" invisible="not enable_insurance or not is_pharmacy_pos"/>
+                    </group>
+                    <group string="Patient Management">
+                        <field name="require_patient_info" invisible="not is_pharmacy_pos"/>
+                        <field name="auto_create_patient" invisible="not is_pharmacy_pos"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

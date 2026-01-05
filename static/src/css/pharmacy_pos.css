@@ -1,0 +1,221 @@
+.pharmacy-patient-popup {
+    min-width: 600px;
+    max-width: 800px;
+}
+
+.pharmacy-patient-popup .search-box {
+    margin-bottom: 20px;
+}
+
+.pharmacy-patient-popup .search-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.pharmacy-patient-popup .patient-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.pharmacy-patient-popup .patient-item {
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pharmacy-patient-popup .patient-item:hover {
+    background-color: #f5f5f5;
+    border-color: #007bff;
+}
+
+.pharmacy-patient-popup .patient-item.selected {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
+    border-width: 2px;
+}
+
+.pharmacy-patient-popup .patient-info h4 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.pharmacy-patient-popup .patient-details {
+    margin: 5px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.pharmacy-patient-popup .patient-id {
+    margin: 5px 0 0 0;
+    color: #999;
+    font-size: 13px;
+}
+
+.pharmacy-patient-popup .no-patients {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+.pharmacy-patient-popup .new-patient-form {
+    padding: 20px 0;
+}
+
+.pharmacy-patient-popup .new-patient-form h4 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.pharmacy-patient-popup .form-group {
+    margin-bottom: 15px;
+}
+
+.pharmacy-patient-popup .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #555;
+}
+
+.pharmacy-patient-popup .form-group input,
+.pharmacy-patient-popup .form-group select,
+.pharmacy-patient-popup .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.pharmacy-patient-popup .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pharmacy-patient-popup .form-actions button {
+    flex: 1;
+}
+
+/* Pharmacist Approval Popup */
+.pharmacist-approval-popup {
+    min-width: 500px;
+}
+
+.pharmacist-approval-popup .alert {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.pharmacist-approval-popup .alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #856404;
+}
+
+.pharmacist-approval-popup .form-group {
+    margin-bottom: 15px;
+}
+
+.pharmacist-approval-popup .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #555;
+}
+
+.pharmacist-approval-popup .form-group input,
+.pharmacist-approval-popup .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Common Popup Styles */
+.popup {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.popup .popup-header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.popup .popup-header h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.popup .popup-body {
+    padding: 20px;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.popup .popup-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.popup .btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.popup .btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.popup .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.popup .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.popup .btn-secondary:hover {
+    background-color: #545b62;
+}
+
+.popup .btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.popup .btn-success:hover {
+    background-color: #218838;
+}
+
+.popup .btn-link {
+    background: transparent;
+    color: #007bff;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+.popup .btn-link:hover {
+    text-decoration: underline;
+}

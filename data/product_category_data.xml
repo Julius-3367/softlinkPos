@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Product Categories for Pharmacy -->
+        <record id="product_category_prescription_medicines" model="product.category">
+            <field name="name">Prescription Medicines (POM)</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+
+        <record id="product_category_otc" model="product.category">
+            <field name="name">Over The Counter (OTC)</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+
+        <record id="product_category_controlled_drugs" model="product.category">
+            <field name="name">Controlled Drugs</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+
+        <record id="product_category_pharmacy_medicines" model="product.category">
+            <field name="name">Pharmacy Medicines (P)</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+
+        <record id="product_category_medical_supplies" model="product.category">
+            <field name="name">Medical Supplies</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+
+        <record id="product_category_vitamins_supplements" model="product.category">
+            <field name="name">Vitamins &amp; Supplements</field>
+            <field name="parent_id" ref="product.product_category_all"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Sequence for Prescriptions -->
+        <record id="sequence_pharmacy_prescription" model="ir.sequence">
+            <field name="name">Pharmacy Prescription</field>
+            <field name="code">pharmacy.prescription</field>
+            <field name="prefix">RX</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="implementation">standard</field>
+        </record>
+
+    </data>
+</odoo>

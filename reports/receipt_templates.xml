@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Paper Format for 80mm Thermal -->
+    <record id="paperformat_thermal_80mm" model="report.paperformat">
+        <field name="name">Thermal 80mm</field>
+        <field name="default" eval="False"/>
+        <field name="format">custom</field>
+        <field name="page_height">297</field>
+        <field name="page_width">80</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">3</field>
+        <field name="margin_bottom">3</field>
+        <field name="margin_left">3</field>
+        <field name="margin_right">3</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+    <!-- Thermal Receipt Template (80mm) -->
+    <template id="report_thermal_receipt">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+                <div class="page" style="width: 80mm; font-family: monospace; font-size: 12px;">
+                    <!-- Header -->
+                    <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 10px; margin-bottom: 10px;">
+                        <h3 style="margin: 5px 0;">
+                            <strong t-field="o.company_id.name"/>
+                        </h3>
+                        <div t-if="o.company_id.street">
+                            <t t-esc="o.company_id.street"/>
+                        </div>
+                        <div t-if="o.company_id.street2">
+                            <t t-esc="o.company_id.street2"/>
+                        </div>
+                        <div t-if="o.company_id.city">
+                            <t t-esc="o.company_id.city"/>, Kenya
+                        </div>
+                        <div t-if="o.company_id.phone">
+                            Tel: <t t-esc="o.company_id.phone"/>
+                        </div>
+                        <div t-if="o.company_id.vat" style="font-weight: bold;">
+                            PIN: <t t-esc="o.company_id.vat"/>
+                        </div>
+                    </div>
+
+                    <!-- Receipt Info -->
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Receipt No:</span>
+                            <strong t-field="o.receipt_number"/>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Date:</span>
+                            <span t-field="o.date_order" t-options='{"widget": "datetime", "format": "dd/MM/yyyy HH:mm"}'/>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Cashier:</span>
+                            <span t-field="o.cashier_name"/>
+                        </div>
+                        <div t-if="o.patient_id" style="display: flex; justify-content: space-between;">
+                            <span>Patient:</span>
+                            <span t-field="o.patient_id.full_name"/>
+                        </div>
+                        <div t-if="o.prescription_id" style="display: flex; justify-content: space-between;">
+                            <span>Prescription:</span>
+                            <span t-field="o.prescription_id.name"/>
+                        </div>
+                    </div>
+
+                    <!-- Items -->
+                    <div style="border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 5px 0; margin-bottom: 10px;">
+                        <table style="width: 100%; font-size: 11px;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left;">Item</th>
+                                    <th style="text-align: right;">Qty</th>
+                                    <th style="text-align: right;">Price</th>
+                                    <th style="text-align: right;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.lines" t-as="line">
+                                    <td colspan="4" style="padding-top: 5px;">
+                                        <div style="font-weight: bold;">
+                                            <t t-esc="line.product_id.name"/>
+                                        </div>
+                                        <div t-if="line.lot_id" style="font-size: 10px;">
+                                            Batch: <t t-esc="line.lot_id.name"/>
+                                            <span t-if="line.expiry_date">
+                                                | Exp: <t t-esc="line.expiry_date.strftime('%m/%Y')"/>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr t-foreach="o.lines" t-as="line">
+                                    <td></td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="'%.0f' % line.qty"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="'%.2f' % line.price_unit"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <strong><t t-esc="'%.2f' % line.price_subtotal_incl"/></strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Totals -->
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Subtotal:</span>
+                            <span>KES <t t-esc="'{:,.2f}'.format(o.amount_total - o.amount_tax)"/></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>VAT (16%):</span>
+                            <span>KES <t t-esc="'{:,.2f}'.format(o.amount_tax)"/></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: bold; border-top: 1px solid #000; padding-top: 5px; margin-top: 5px;">
+                            <span>TOTAL:</span>
+                            <span>KES <t t-esc="'{:,.2f}'.format(o.amount_total)"/></span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Details -->
+                    <div style="border-top: 1px dashed #000; padding-top: 10px; margin-bottom: 10px;">
+                        <div style="font-weight: bold; margin-bottom: 5px;">Payment Details:</div>
+                        <t t-foreach="o.payment_ids" t-as="payment">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                <span>
+                                    <t t-esc="payment.payment_method_id.name"/>
+                                    <span t-if="payment.mpesa_receipt_number">
+                                        (<t t-esc="payment.mpesa_receipt_number"/>)
+                                    </span>
+                                </span>
+                                <span>KES <t t-esc="'{:,.2f}'.format(payment.amount)"/></span>
+                            </div>
+                            <div t-if="payment.payment_type == 'cash' and payment.change_amount > 0" style="display: flex; justify-content: space-between; margin-left: 20px; font-size: 10px;">
+                                <span>Tendered:</span>
+                                <span>KES <t t-esc="'{:,.2f}'.format(payment.amount_tendered)"/></span>
+                            </div>
+                            <div t-if="payment.payment_type == 'cash' and payment.change_amount > 0" style="display: flex; justify-content: space-between; margin-left: 20px; font-size: 10px;">
+                                <span>Change:</span>
+                                <span>KES <t t-esc="'{:,.2f}'.format(payment.change_amount)"/></span>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Insurance Details -->
+                    <div t-if="o.insurance_claim" style="border-top: 1px dashed #000; padding-top: 10px; margin-bottom: 10px;">
+                        <div style="font-weight: bold; margin-bottom: 5px;">Insurance Claim:</div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Company:</span>
+                            <span t-field="o.insurance_company"/>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Member No:</span>
+                            <span t-field="o.insurance_number"/>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Insurance Pays:</span>
+                            <span>KES <t t-esc="'{:,.2f}'.format(o.insurance_amount)"/></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Patient Copay:</span>
+                            <span>KES <t t-esc="'{:,.2f}'.format(o.patient_copay)"/></span>
+                        </div>
+                    </div>
+
+                    <!-- KRA eTIMS Details -->
+                    <div t-if="o.kra_invoice_number" style="border-top: 1px dashed #000; padding-top: 10px; margin-bottom: 10px;">
+                        <div style="font-weight: bold; text-align: center; margin-bottom: 5px;">TAX INVOICE</div>
+                        <div style="font-size: 10px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Invoice No:</span>
+                                <strong t-field="o.kra_invoice_number"/>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>CU Serial:</span>
+                                <span t-field="o.kra_cu_serial"/>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Signature:</span>
+                                <span t-field="o.kra_signature"/>
+                            </div>
+                        </div>
+                        
+                        <!-- QR Code -->
+                        <div t-if="o.kra_qr_code" style="text-align: center; margin-top: 10px;">
+                            <img t-att-src="'data:image/png;base64,%s' % o.kra_qr_code.decode('utf-8')" style="width: 120px; height: 120px;"/>
+                            <div style="font-size: 9px; margin-top: 5px;">Scan for KRA verification</div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="border-top: 1px dashed #000; padding-top: 10px; text-align: center;">
+                        <div style="font-weight: bold; margin-bottom: 5px;">THANK YOU!</div>
+                        <div style="font-size: 10px;">
+                            You were served by <t t-esc="o.cashier_name"/>
+                        </div>
+                        <div t-if="o.approved_by_pharmacist" style="font-size: 10px;">
+                            Pharmacist: <t t-esc="o.pharmacist_id.name"/>
+                        </div>
+                        <div style="font-size: 10px; margin-top: 10px;">
+                            Please keep this receipt for your records
+                        </div>
+                        <div style="font-size: 9px; margin-top: 5px;">
+                            Powered by Options Pharmacy POS
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- A4 Invoice Template -->
+    <template id="report_a4_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Header -->
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <h2>TAX INVOICE</h2>
+                                <p>
+                                    <strong>Invoice No:</strong> <span t-field="o.kra_invoice_number"/><br/>
+                                    <strong>Receipt No:</strong> <span t-field="o.receipt_number"/><br/>
+                                    <strong>Date:</strong> <span t-field="o.date_order" t-options='{"widget": "datetime"}'/><br/>
+                                </p>
+                            </div>
+                            <div class="col-6 text-right">
+                                <div t-if="o.kra_qr_code">
+                                    <img t-att-src="'data:image/png;base64,%s' % o.kra_qr_code.decode('utf-8')" style="width: 100px; height: 100px;"/>
+                                    <br/>
+                                    <small>KRA Verification QR Code</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bill To -->
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <strong>Bill To:</strong><br/>
+                                <div t-if="o.patient_id">
+                                    <span t-field="o.patient_id.full_name"/><br/>
+                                    <span t-if="o.patient_id.phone" t-field="o.patient_id.phone"/><br/>
+                                    <span t-if="o.patient_id.email" t-field="o.patient_id.email"/>
+                                </div>
+                                <div t-else="">
+                                    <span t-field="o.partner_id.name"/><br/>
+                                    <span t-field="o.partner_id.phone"/><br/>
+                                    <span t-field="o.partner_id.email"/>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div t-if="o.prescription_id">
+                                    <strong>Prescription:</strong> <span t-field="o.prescription_id.name"/><br/>
+                                    <strong>Prescriber:</strong> <span t-field="o.prescription_id.prescriber_id.name"/>
+                                </div>
+                                <div t-if="o.insurance_claim" class="mt-2">
+                                    <strong>Insurance:</strong> <span t-field="o.insurance_company"/><br/>
+                                    <strong>Member No:</strong> <span t-field="o.insurance_number"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Items Table -->
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Batch/Lot</th>
+                                    <th class="text-right">Qty</th>
+                                    <th class="text-right">Unit Price</th>
+                                    <th class="text-right">VAT</th>
+                                    <th class="text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.lines" t-as="line">
+                                    <td>
+                                        <strong><span t-field="line.product_id.name"/></strong>
+                                        <div t-if="line.dosage_instructions" style="font-size: 11px; color: #666;">
+                                            <t t-esc="line.dosage_instructions"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span t-if="line.lot_id" t-field="line.lot_id.name"/>
+                                        <div t-if="line.expiry_date" style="font-size: 11px;">
+                                            Exp: <span t-field="line.expiry_date"/>
+                                        </div>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.0f' % line.qty"/>
+                                    </td>
+                                    <td class="text-right">
+                                        KES <span t-esc="'{:,.2f}'.format(line.price_unit)"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-if="line.tax_ids_after_fiscal_position">
+                                            <t t-esc="line.tax_ids_after_fiscal_position[0].amount"/>%
+                                        </span>
+                                    </td>
+                                    <td class="text-right">
+                                        KES <strong><span t-esc="'{:,.2f}'.format(line.price_subtotal_incl)"/></strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Totals -->
+                        <div class="row">
+                            <div class="col-6">
+                                <!-- Payment Details -->
+                                <div class="mt-4">
+                                    <h5>Payment Details</h5>
+                                    <table class="table table-sm">
+                                        <tbody>
+                                            <tr t-foreach="o.payment_ids" t-as="payment">
+                                                <td><span t-field="payment.payment_method_id.name"/></td>
+                                                <td class="text-right">KES <span t-esc="'{:,.2f}'.format(payment.amount)"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Subtotal:</strong></td>
+                                            <td class="text-right">KES <span t-esc="'{:,.2f}'.format(o.amount_total - o.amount_tax)"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>VAT (16%):</strong></td>
+                                            <td class="text-right">KES <span t-esc="'{:,.2f}'.format(o.amount_tax)"/></td>
+                                        </tr>
+                                        <tr t-if="o.insurance_claim">
+                                            <td><strong>Insurance Coverage:</strong></td>
+                                            <td class="text-right">KES <span t-esc="'{:,.2f}'.format(o.insurance_amount)"/></td>
+                                        </tr>
+                                        <tr t-if="o.insurance_claim">
+                                            <td><strong>Patient Copay:</strong></td>
+                                            <td class="text-right">KES <span t-esc="'{:,.2f}'.format(o.patient_copay)"/></td>
+                                        </tr>
+                                        <tr class="border-top">
+                                            <td><h4><strong>TOTAL:</strong></h4></td>
+                                            <td class="text-right"><h4><strong>KES <span t-esc="'{:,.2f}'.format(o.amount_total)"/></strong></h4></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- KRA Details -->
+                        <div class="row mt-4" t-if="o.kra_invoice_number">
+                            <div class="col-12">
+                                <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+                                    <strong>KRA eTIMS Tax Invoice Details</strong><br/>
+                                    <small>
+                                        Control Unit Serial: <span t-field="o.kra_cu_serial"/> |
+                                        Invoice Counter: <span t-field="o.kra_invoice_counter"/> |
+                                        Signature: <span t-field="o.kra_signature"/>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="row mt-4">
+                            <div class="col-12 text-center">
+                                <p>
+                                    <strong>Thank you for your business!</strong><br/>
+                                    <small>Served by: <span t-field="o.cashier_name"/></small>
+                                    <span t-if="o.approved_by_pharmacist"><br/>
+                                        <small>Pharmacist: <span t-field="o.pharmacist_id.name"/></small>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Actions -->
+    <record id="action_report_thermal_receipt" model="ir.actions.report">
+        <field name="name">Thermal Receipt (80mm)</field>
+        <field name="model">pos.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">softlink_pos.report_thermal_receipt</field>
+        <field name="report_file">softlink_pos.report_thermal_receipt</field>
+        <field name="binding_model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="softlink_pos.paperformat_thermal_80mm"/>
+    </record>
+
+    <record id="action_report_a4_invoice" model="ir.actions.report">
+        <field name="name">Tax Invoice (A4)</field>
+        <field name="model">pos.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">softlink_pos.report_a4_invoice</field>
+        <field name="report_file">softlink_pos.report_a4_invoice</field>
+        <field name="binding_model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    
+
+    <!-- Sequence for Receipt Number -->
+    <record id="seq_pos_receipt_number" model="ir.sequence">
+        <field name="name">POS Receipt Number</field>
+        <field name="code">pos.receipt.number</field>
+        <field name="prefix">RCP</field>
+        <field name="padding">7</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+</odoo>

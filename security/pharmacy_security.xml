@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Pharmacy Categories -->
+        <record id="module_category_pharmacy" model="ir.module.category">
+            <field name="name">Pharmacy</field>
+            <field name="description">Pharmacy POS Management</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <!-- Pharmacy User Groups -->
+        
+        <!-- Pharmacy Cashier -->
+        <record id="group_pharmacy_cashier" model="res.groups">
+            <field name="name">Pharmacy Cashier</field>
+            <field name="category_id" ref="module_category_pharmacy"/>
+            <field name="implied_ids" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
+            <field name="comment">Pharmacy cashiers can process sales but cannot approve prescriptions</field>
+        </record>
+
+        <!-- Pharmacy Technician -->
+        <record id="group_pharmacy_technician" model="res.groups">
+            <field name="name">Pharmacy Technician</field>
+            <field name="category_id" ref="module_category_pharmacy"/>
+            <field name="implied_ids" eval="[(4, ref('group_pharmacy_cashier'))]"/>
+            <field name="comment">Pharmacy technicians can manage inventory and assist with prescriptions</field>
+        </record>
+
+        <!-- Pharmacist -->
+        <record id="group_pharmacy_pharmacist" model="res.groups">
+            <field name="name">Pharmacist</field>
+            <field name="category_id" ref="module_category_pharmacy"/>
+            <field name="implied_ids" eval="[(4, ref('group_pharmacy_technician'))]"/>
+            <field name="comment">Pharmacists can verify and approve prescriptions and controlled drugs</field>
+        </record>
+
+        <!-- Pharmacy Manager -->
+        <record id="group_pharmacy_manager" model="res.groups">
+            <field name="name">Pharmacy Manager</field>
+            <field name="category_id" ref="module_category_pharmacy"/>
+            <field name="implied_ids" eval="[(4, ref('group_pharmacy_pharmacist')), (4, ref('point_of_sale.group_pos_manager'))]"/>
+            <field name="comment">Pharmacy managers have full access to all pharmacy features</field>
+        </record>
+
+        <!-- Record Rules -->
+        
+        <!-- Patient Access Rules -->
+        <record id="patient_rule_cashier" model="ir.rule">
+            <field name="name">Pharmacy Patient: Cashier</field>
+            <field name="model_id" ref="model_pharmacy_patient"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_pharmacy_cashier'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Prescription Access Rules -->
+        <record id="prescription_rule_cashier" model="ir.rule">
+            <field name="name">Pharmacy Prescription: Cashier - Read Only</field>
+            <field name="model_id" ref="model_pharmacy_prescription"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_pharmacy_cashier'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="prescription_rule_pharmacist" model="ir.rule">
+            <field name="name">Pharmacy Prescription: Pharmacist - Full Access</field>
+            <field name="model_id" ref="model_pharmacy_prescription"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_pharmacy_pharmacist'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Controlled Drugs Register Access -->
+        <record id="controlled_drugs_rule_pharmacist" model="ir.rule">
+            <field name="name">Controlled Drugs Register: Pharmacist</field>
+            <field name="model_id" ref="model_pharmacy_controlled_drugs_register"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_pharmacy_pharmacist'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="controlled_drugs_rule_manager" model="ir.rule">
+            <field name="name">Controlled Drugs Register: Manager</field>
+            <field name="model_id" ref="model_pharmacy_controlled_drugs_register"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_pharmacy_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

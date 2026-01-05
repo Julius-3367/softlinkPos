@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Prescription Tree View -->
+    <record id="view_pharmacy_prescription_tree" model="ir.ui.view">
+        <field name="name">pharmacy.prescription.tree</field>
+        <field name="model">pharmacy.prescription</field>
+        <field name="arch" type="xml">
+            <list string="Prescriptions" decoration-success="state == 'dispensed'" 
+                  decoration-info="state == 'confirmed'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="prescription_date"/>
+                <field name="patient_id"/>
+                <field name="prescriber_id"/>
+                <field name="diagnosis"/>
+                <field name="valid_until"/>
+                <field name="is_valid" widget="boolean_toggle"/>
+                <field name="verified_by_pharmacist" widget="boolean_toggle"/>
+                <field name="state" widget="badge" 
+                       decoration-success="state == 'dispensed'"
+                       decoration-info="state == 'confirmed'"
+                       decoration-warning="state == 'partially_dispensed'"
+                       decoration-muted="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Prescription Form View -->
+    <record id="view_pharmacy_prescription_form" model="ir.ui.view">
+        <field name="name">pharmacy.prescription.form</field>
+        <field name="model">pharmacy.prescription</field>
+        <field name="arch" type="xml">
+            <form string="Prescription">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" 
+                            invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_verify_prescription" type="object" string="Verify (Pharmacist)" 
+                            invisible="state not in ['draft', 'confirmed'] or verified_by_pharmacist" 
+                            class="btn-success"/>
+                    <button name="action_dispense" type="object" string="Mark as Dispensed" 
+                            invisible="state == 'dispensed' or not verified_by_pharmacist" 
+                            class="btn-info"/>
+                    <button name="action_cancel" type="object" string="Cancel" 
+                            invisible="state in ['cancelled', 'dispensed']" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,dispensed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Patient Information">
+                            <field name="patient_id" options="{'no_create': True}"/>
+                            <field name="patient_age"/>
+                            <field name="patient_phone"/>
+                        </group>
+                        <group string="Prescriber Information">
+                            <field name="prescriber_id" options="{'no_create': True}"/>
+                            <field name="prescriber_license"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Prescription Details">
+                            <field name="prescription_date"/>
+                            <field name="valid_until"/>
+                            <field name="is_valid" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Verification">
+                            <field name="verified_by_pharmacist" widget="boolean_toggle"/>
+                            <field name="pharmacist_id" invisible="not verified_by_pharmacist"/>
+                            <field name="verification_date" invisible="not verified_by_pharmacist"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="diagnosis"/>
+                        <field name="special_instructions"/>
+                    </group>
+                    <notebook>
+                        <page string="Prescription Lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="product_id" domain="[('is_pharmaceutical', '=', True)]"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="dosage"/>
+                                    <field name="frequency"/>
+                                    <field name="duration"/>
+                                    <field name="instructions"/>
+                                    <field name="quantity_dispensed"/>
+                                    <field name="remaining_quantity"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Dispensing Information" invisible="state != 'dispensed'">
+                            <group>
+                                <field name="dispensed_by"/>
+                                <field name="dispensing_date"/>
+                                <field name="pos_order_id"/>
+                            </group>
+                        </page>
+                        <page string="Attachments">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Notes">
+                            <group>
+                                <field name="pharmacist_notes"/>
+                                <field name="notes"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Prescription Action -->
+    <record id="action_pharmacy_prescription" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="res_model">pharmacy.prescription</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_valid': 1}</field>
+    </record>
+
+    <!-- Prescription Search View -->
+    <record id="view_pharmacy_prescription_search" model="ir.ui.view">
+        <field name="name">pharmacy.prescription.search</field>
+        <field name="model">pharmacy.prescription</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="prescriber_id"/>
+                <filter string="Valid" name="valid" domain="[('is_valid', '=', True)]"/>
+                <filter string="Verified" name="verified" domain="[('verified_by_pharmacist', '=', True)]"/>
+                <filter string="Dispensed" name="dispensed" domain="[('state', '=', 'dispensed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Patient" name="group_patient" context="{'group_by': 'patient_id'}"/>
+                    <filter string="Prescriber" name="group_prescriber" context="{'group_by': 'prescriber_id'}"/>
+                    <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>

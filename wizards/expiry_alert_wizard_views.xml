@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Expiry Alert Wizard Form View -->
+    <record id="view_expiry_alert_wizard_form" model="ir.ui.view">
+        <field name="name">pharmacy.expiry.alert.wizard.form</field>
+        <field name="model">pharmacy.expiry.alert.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Expiry Alert">
+                <group>
+                    <group>
+                        <field name="days_threshold"/>
+                    </group>
+                    <group>
+                        <field name="show_expired"/>
+                        <field name="show_near_expiry"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Results" invisible="not line_ids">
+                        <field name="line_ids">
+                            <list decoration-danger="is_expired == True" decoration-warning="status == 'CRITICAL'">
+                                <field name="product_id"/>
+                                <field name="lot_id"/>
+                                <field name="expiry_date"/>
+                                <field name="available_qty"/>
+                                <field name="days_to_expiry"/>
+                                <field name="status" widget="badge" 
+                                       decoration-danger="status == 'EXPIRED'"
+                                       decoration-warning="status == 'CRITICAL'"
+                                       decoration-info="status == 'WARNING'"/>
+                                <field name="is_expired" column_invisible="1"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="action_generate_report" type="object" string="Generate Report" class="btn-primary"/>
+                    <button name="action_print_report" type="object" string="Print" class="btn-secondary" invisible="not line_ids"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Expiry Alert Wizard Action -->
+    <record id="action_expiry_alert_wizard" model="ir.actions.act_window">
+        <field name="name">Expiry Alert</field>
+        <field name="res_model">pharmacy.expiry.alert.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

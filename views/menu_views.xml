@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Main Menu -->
+    <menuitem id="menu_pharmacy_root" name="Options Pharmacy" sequence="10" web_icon="softlink_pos,static/description/icon.png"/>
+    
+    <!-- Patients & Prescriptions Submenu -->
+    <menuitem id="menu_pharmacy_patients" name="Patients &amp; Prescriptions" parent="menu_pharmacy_root" sequence="2"/>
+    <menuitem id="menu_pharmacy_patient_list" name="Patients" parent="menu_pharmacy_patients" 
+              action="action_pharmacy_patient" sequence="1"/>
+    <menuitem id="menu_pharmacy_prescription_list" name="Prescriptions" parent="menu_pharmacy_patients" 
+              action="action_pharmacy_prescription" sequence="2"/>
+    <menuitem id="menu_pharmacy_prescriber_list" name="Prescribers" parent="menu_pharmacy_patients" 
+              action="action_pharmacy_prescriber" sequence="3"/>
+    
+    <!-- Products Submenu -->
+    <menuitem id="menu_pharmacy_products" name="Products" parent="menu_pharmacy_root" sequence="3"/>
+    <menuitem id="menu_pharmacy_product_list" name="Pharmacy Products" parent="menu_pharmacy_products" 
+              action="action_pharmacy_product" sequence="1"/>
+    
+    <!-- Inventory Submenu -->
+    <menuitem id="menu_pharmacy_inventory" name="Inventory" parent="menu_pharmacy_root" sequence="4"/>
+    <menuitem id="menu_pharmacy_expiry_alert" name="Expiry Alert" parent="menu_pharmacy_inventory" 
+              action="action_expiry_alert_wizard" sequence="1"/>
+    
+    <!-- Compliance Submenu -->
+    <menuitem id="menu_pharmacy_compliance" name="Compliance" parent="menu_pharmacy_root" sequence="5"/>
+    <menuitem id="menu_pharmacy_controlled_drugs" name="Controlled Drugs Register" parent="menu_pharmacy_compliance" 
+              action="action_controlled_drugs_register" sequence="1"/>
+    
+    <!-- Configuration Submenu -->
+    <menuitem id="menu_pharmacy_configuration" name="Configuration" parent="menu_pharmacy_root" sequence="10"/>
+    <menuitem id="menu_pharmacy_kra_etims_config" name="KRA eTIMS Configuration" parent="menu_pharmacy_configuration" 
+              action="action_kra_etims_config" sequence="1" groups="group_pharmacy_manager"/>
+    
+</odoo>

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kra_etims_config_cashier,kra.etims.config.cashier,model_kra_etims_config,group_pharmacy_cashier,1,0,0,0
+access_kra_etims_config_manager,kra.etims.config.manager,model_kra_etims_config,group_pharmacy_manager,1,1,1,1

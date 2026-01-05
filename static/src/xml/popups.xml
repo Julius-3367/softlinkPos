@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Patient Selection Popup -->
+    <t t-name="softlink_pos.PatientSelectionPopup">
+        <div class="popup pharmacy-patient-popup">
+            <div class="popup-header">
+                <h3><t t-esc="props.title"/></h3>
+            </div>
+            <div class="popup-body">
+                <div t-if="!state.showNewPatientForm" class="patient-search">
+                    <div class="search-box">
+                        <input type="text" 
+                               class="form-control search-input"
+                               placeholder="Search by name, phone, or ID number..."
+                               t-model="state.searchQuery"
+                               t-on-input="onSearchInput"/>
+                    </div>
+                    
+                    <div class="patient-list">
+                        <t t-if="state.patients.length === 0">
+                            <div class="no-patients">
+                                <p>No patients found</p>
+                                <button class="btn btn-primary" t-on-click="showNewForm">
+                                    Create New Patient
+                                </button>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="patient-item" 
+                                 t-foreach="state.patients" 
+                                 t-as="patient" 
+                                 t-key="patient.id"
+                                 t-att-class="{'selected': state.selectedPatient and state.selectedPatient.id === patient.id}"
+                                 t-on-click="() => this.selectPatient(patient)">
+                                <div class="patient-info">
+                                    <h4><t t-esc="patient.full_name"/></h4>
+                                    <p class="patient-details">
+                                        <span><t t-esc="patient.phone"/></span>
+                                        <span class="mx-2">•</span>
+                                        <span><t t-esc="patient.age"/> years</span>
+                                        <span class="mx-2">•</span>
+                                        <span><t t-esc="patient.gender"/></span>
+                                    </p>
+                                    <p t-if="patient.id_number" class="patient-id">
+                                        ID: <t t-esc="patient.id_number"/>
+                                    </p>
+                                </div>
+                            </div>
+                            <button class="btn btn-link mt-3" t-on-click="showNewForm">
+                                + Create New Patient
+                            </button>
+                        </t>
+                    </div>
+                </div>
+
+                <div t-if="state.showNewPatientForm" class="new-patient-form">
+                    <h4>New Patient Registration</h4>
+                    <div class="form-group">
+                        <label>First Name *</label>
+                        <input type="text" class="form-control" t-model="state.newPatient.first_name"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name *</label>
+                        <input type="text" class="form-control" t-model="state.newPatient.last_name"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" class="form-control" t-model="state.newPatient.phone"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth *</label>
+                        <input type="date" class="form-control" t-model="state.newPatient.date_of_birth"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender *</label>
+                        <select class="form-control" t-model="state.newPatient.gender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>ID/Passport Number</label>
+                        <input type="text" class="form-control" t-model="state.newPatient.id_number"/>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" t-on-click="hideNewForm">Cancel</button>
+                        <button class="btn btn-primary" t-on-click="createPatient">Create Patient</button>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button class="btn btn-secondary" t-on-click="cancel">
+                    <t t-esc="props.cancelText"/>
+                </button>
+                <button class="btn btn-primary" t-on-click="confirm" t-if="!state.showNewPatientForm">
+                    <t t-esc="props.confirmText"/>
+                </button>
+            </div>
+        </div>
+    </t>
+
+    <!-- Pharmacist Approval Popup -->
+    <t t-name="softlink_pos.PharmacistApprovalPopup">
+        <div class="popup pharmacist-approval-popup">
+            <div class="popup-header">
+                <h3><t t-esc="props.title"/></h3>
+            </div>
+            <div class="popup-body">
+                <div class="alert alert-warning">
+                    <p>This order contains prescription or controlled items that require pharmacist approval.</p>
+                </div>
+                <div class="form-group">
+                    <label>Pharmacist PIN *</label>
+                    <input type="password" 
+                           class="form-control" 
+                           t-model="state.pharmacistPin"
+                           placeholder="Enter pharmacist PIN"/>
+                </div>
+                <div class="form-group">
+                    <label>Notes (optional)</label>
+                    <textarea class="form-control" 
+                              t-model="state.notes" 
+                              rows="3"
+                              placeholder="Additional notes..."/>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button class="btn btn-secondary" t-on-click="cancel">
+                    <t t-esc="props.cancelText"/>
+                </button>
+                <button class="btn btn-success" t-on-click="confirm">
+                    <t t-esc="props.confirmText"/>
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>
